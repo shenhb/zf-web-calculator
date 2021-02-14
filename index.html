@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算器</title>
+    <script src="resource/vue.min.js"></script>
+    <link rel="stylesheet" href="resource/theme-chalk.css">
+    <script src="resource/element_ui_lib_index.js"></script>
+    <link rel="stylesheet" href="resource/index.css">
+    <script src="resource/lodash.min.js"></script>
+</head>
+<body>
+<div id="app" >
+    <div v-cloak>
+        <el-row >
+            <el-col :span="4">
+                <div class="grid-content bg-purple"></div>
+            </el-col>
+            <el-col :span="16">
+                <el-tabs  type="border-card" v-model="activeName">
+                    <el-tab-pane label="conditional recurrence-free survival (cRFS)" name="first">
+                        <el-form ref="cRFSForm" :model="cRFSForm" :rules="cRFSRules" label-width="auto">
+                            <el-form-item label="Maximum tumor diameter(cm)" required>
+                                <el-slider
+                                        v-model="cRFSForm.maximumTumorDiameter"
+                                        :step="1"
+                                        :max="16"
+                                        show-input>
+                                </el-slider>
+                            </el-form-item>
+                            <el-form-item label="Distance from anal verge(cm)" required>
+                                <el-slider
+                                        v-model="cRFSForm.distanceFromAnalVerge"
+                                        :step="1"
+                                        :min="1"
+                                        :max="15"
+                                        show-input>
+                                </el-slider>
+                            </el-form-item>
+                            <el-form-item label="ypTNM stage" required>
+                                <el-radio-group v-model="cRFSForm.ypTNMStage">
+                                    <el-radio-button label="ypCR"></el-radio-button>
+                                    <el-radio-button label="I"></el-radio-button>
+                                    <el-radio-button label="II"></el-radio-button>
+                                    <el-radio-button label="III"></el-radio-button>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="Perineural invasion" required>
+                                <el-radio-group v-model="cRFSForm.perineuralInvasion">
+                                    <el-radio-button label="No"></el-radio-button>
+                                    <el-radio-button label="Yes"></el-radio-button>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="time(months)" required>
+                                <el-slider
+                                        v-model="cRFSForm.months"
+                                        :step="3"
+                                        :min="3"
+                                        :max="57"
+                                        show-input>
+                                </el-slider>
+                            </el-form-item>
+                            <el-form-item label="totalScore" required>
+                                <el-input
+                                        placeholder=""
+                                        v-model="cRFSForm.totalScore"
+                                        :disabled="true">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="result(%)">
+                                {{cRFSForm.result}}
+                                <!--<el-input
+                                        placeholder=""
+                                        v-model="cRFSForm.result"
+                                        :disabled="true">
+                                </el-input>-->
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm('cRFSForm')">计算</el-button>
+                                <!--                    <el-button type="primary" @click="onSubmit">立即创建</el-button>-->
+                                <!--                    <el-button>取消</el-button>-->
+                            </el-form-item>
+                        </el-form>
+                    </el-tab-pane>
+
+                    <el-tab-pane>
+                        <span slot="label">conditional overall survival (cOS)</span>
+
+                        <el-form ref="cOSForm" :model="cOSForm" :rules="cOSRules" label-width="auto">
+                            <el-form-item label="Maximum tumor diameter(cm)" required>
+                                <el-slider
+                                        v-model="cOSForm.maximumTumorDiameter"
+                                        :step="1"
+                                        :max="16"
+                                        show-input>
+                                </el-slider>
+                            </el-form-item>
+                            <el-form-item label="Distance from anal verge (cm) Points" required>
+                                <el-slider
+                                        v-model="cOSForm.distanceFromAnalVergePoints"
+                                        :step="1"
+                                        :min="1"
+                                        :max="15"
+                                        show-input>
+                                </el-slider>
+                            </el-form-item>
+                            <el-form-item label="ypTNM stage" required>
+                                <el-radio-group v-model="cOSForm.ypTNMStage">
+                                    <el-radio-button label="ypCR"></el-radio-button>
+                                    <el-radio-button label="I"></el-radio-button>
+                                    <el-radio-button label="II"></el-radio-button>
+                                    <el-radio-button label="III"></el-radio-button>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="Perineural invasion" required>
+                                <el-radio-group v-model="cOSForm.perineuralInvasion">
+                                    <el-radio-button label="No"></el-radio-button>
+                                    <el-radio-button label="Yes"></el-radio-button>
+                                </el-radio-group>
+                            </el-form-item>
+
+                            <el-form-item label="Surgical procedure" required>
+                                <el-radio-group v-model="cOSForm.surgicalProcedure">
+                                    <el-radio-button label="AR"></el-radio-button>
+                                    <el-radio-button label="APR"></el-radio-button>
+                                    <el-radio-button label="Hartmann"></el-radio-button>
+                                </el-radio-group>
+                            </el-form-item>
+
+                            <el-form-item label="Preoperative CA19-9" required>
+                                <el-radio-group v-model="cOSForm.preoperative_CA19_9">
+                                    <el-radio-button label="Normal"></el-radio-button>
+                                    <el-radio-button label="Elevated"></el-radio-button>
+                                </el-radio-group>
+                            </el-form-item>
+
+                            <el-form-item label="time(months)" required>
+                                <el-slider
+                                        v-model="cOSForm.months"
+                                        :step="3"
+                                        :min="6"
+                                        :max="57"
+                                        show-input>
+                                </el-slider>
+                            </el-form-item>
+                            <el-form-item label="totalScore" required>
+                                <el-input
+                                        placeholder=""
+                                        v-model="cOSForm.totalScore"
+                                        :disabled="true">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="result(%)">
+                                {{cOSForm.result}}
+                                <!--<el-input
+                                        placeholder=""
+                                        v-model="cOSForm.result"
+                                        :disabled="true">
+                                </el-input>-->
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm('cOSForm')">计算</el-button>
+                                <!--                    <el-button type="primary" @click="onSubmit">立即创建</el-button>-->
+                                <!--                    <el-button>取消</el-button>-->
+                            </el-form-item>
+                        </el-form>
+
+                    </el-tab-pane>
+                </el-tabs>
+            </el-col>
+            <el-col :span="4">
+                <div class="grid-content bg-purple"></div>
+            </el-col>
+        </el-row>
+    </div>
+
+</div>
+</body>
+<script src="resource/index.js"></script>
+</html>
